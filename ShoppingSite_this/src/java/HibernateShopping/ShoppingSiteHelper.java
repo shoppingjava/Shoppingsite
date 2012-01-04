@@ -33,4 +33,20 @@ public class ShoppingSiteHelper {
 
     return musicList;
 }
+    
+   public List getTracks(Integer recordId){
+    List<MusicCategories> musicList = null;
+    try {
+        org.hibernate.Transaction tx = session.beginTransaction();
+        Query q = session.createQuery ("from MusicTracks WHERE recording_id = "+recordId);
+        musicList = (List<MusicCategories>) q.list();
+        
+
+    } catch (Exception e) {
+        session.close();
+    }
+
+    return musicList;
+}
+    
 }

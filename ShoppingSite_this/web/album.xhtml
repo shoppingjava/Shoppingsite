@@ -136,23 +136,23 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
 </div>
     <h:form>
 <span class="categorie">
-    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Classical" action="#{myMusic.setMusicLink('Classical')}" />
+    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Classical" action="#{myAlbum.toIndex('Classical')}" />
 </span>
     
 <span class="categorie">
-    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Country" action="#{myMusic.setMusicLink('Country')}" />
+    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Country" action="#{myAlbum.toIndex('Country')}" />
 </span>
 <span class="categorie">
-    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Hip-Hop" action="#{myMusic.setMusicLink('Hip-Hop')}" />
+    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Hip-Hop" action="#{myAlbum.toIndex('Hip-Hop')}" />
 </span>
 <span class="categorie">
-  <h:commandLink style="margin-left:7px; margin-top:8px;" value="Jazz" action="#{myMusic.setMusicLink('Jazz')}" />
+  <h:commandLink style="margin-left:7px; margin-top:8px;" value="Jazz" action="#{myAlbum.toIndex('Jazz')}" />
 </span>
 <span class="categorie">
-    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Pop" action="#{myMusic.setMusicLink('Pop')}" />
+    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Pop" action="#{myAlbum.toIndex('Pop')}" />
 </span>
 <span class="categorie">
-    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Rock" action="#{myMusic.setMusicLink('Rock')}" />
+    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Rock" action="#{myAlbum.toIndex('Rock')}" />
 </span>
 </h:form>        
         
@@ -188,47 +188,61 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
 
 <div id="headBG">
     <h:form>
-<p><div style="position:absolute; left:10px; top:7px;">#{myMusic.musicCategory}</div></p>
+<p><div style="position:absolute; left:10px; top:7px;">#{myAlbum.artistName} - #{myAlbum.title}</div></p>
 </h:form>
 </div>
     <div id="centerCatBG">
-     <div style=" overflow:auto; width:410px; margin-left:7px; height:auto">
+     <div style=" overflow:auto; width:410px; margin-left:7px; margin-top: 20px; height:auto">
          <h:form>
-         <h:dataTable id="rTable" value="#{myMusic.music}" var="music" styleClass="order-table"
-    			headerClass="order-table-header"
-    			rowClasses="order-table-odd-row,order-table-even-row">
-            
+             <h:graphicImage style="width: 200px; height: 200px;" value="http://users.du.se/~h09tobta/ShoppingSiteBilder/#{myAlbum.imageName}"/>
+             <table style="margin-top: 30px;" id="one-column-emphasis">
+<colgroup>
+<col class="oce-first" />
+    </colgroup>
+<thead>
+<tr>
+<th scope="col">Price</th>
+<th scope="col">Category</th>
+<th scope="col">Tracks</th>
+<th scope="col">In stock</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="color:#F00;">$#{myAlbum.price}</td>
+<td>#{myAlbum.category}</td>
+<td>#{myAlbum.numTracks}</td>
+<td><h:graphicImage value="#{myAlbum.stockValue}" width="50px" height="35px"/></td>
+</tr>
+</tbody>
+</table>
+             <h:graphicImage style="margin-left:20px; margin-top: 35px;" value="resources/_img/noStockTagg.png" width="50px" height="35px"/>
+             <p style="position: absolute; top: 415px; left: 100px; font-family:Verdana, Geneva, sans-serif; font-size: 14px; font-style:italic; color:#666;">The disc is not in stock which means longer delivery</p>
+             <br/>
+             <br/>
+             <h:graphicImage style="margin-left:20px; margin-top: 15px;" value="resources/_img/yesStockTagg.png" width="50px" height="35px"/>
+             <p style="position: absolute; top: 490px; left: 100px; font-family:Verdana, Geneva, sans-serif; font-size: 14px; font-style:italic; color:#666;">The disc is in stock delivery 3 - 4 days</p>
+             <br/>
+             <br/>
+             <p style="position: absolute; top: 579px; left: 89px; font-family:Verdana, Geneva, sans-serif; font-size: 14px; font-style:italic; color:#666;">Quantity</p>
+             <h:inputText size="3" style="margin-top:30px; margin-left: 26px;" id="quantity"/>
+             <div style="width:200px; height: 200px; overflow: auto; position: absolute; top: 60px; left: 220px;">
+           <h:dataTable id="rTable" value="#{myAlbum.tracks}" var="album">            
         <h:column>
-            <f:facet name="header">Artist Name</f:facet>
-            <span class="artist">
-                <h:commandLink action="#{myMusic.setInfoAlbum}" style="margin-right: 7px;" onmouseover="ShowPicture('#{music.title}',1)" onmouseout="ShowPicture('#{music.title}',0)" value="#{music.artistName}"/>
-            </span>
+            #{myAlbum.numberTrack}
         </h:column>
         <h:column>
-            <f:facet name="header">Title</f:facet>
-            #{music.title}
+          #{album.title}
         </h:column>
-         <h:column>
-            <f:facet name="header">Category</f:facet>
-            #{music.category}
-        </h:column>
-        <h:column>
-            <f:facet name="header">Price</f:facet>
-            #{music.price}
-        </h:column>
-        <h:column>
-            <f:facet name="header">Buy</f:facet>
-            <h:commandButton value="Buy"/>
-        </h:column>
-             <h:column>
-                 <div style=" position:absolute; z-index: 1; visibility:hidden; border:solid 1px #CCC; padding:5px; " id="#{music.title}">
-                     <h:graphicImage width="150px" height="150px" value="http://users.du.se/~h09tobta/ShoppingSiteBilder/#{music.imageName}"/>     
-             </div>    
-          </h:column>       
-        </h:dataTable>
              
-             </h:form>
-         
+        </h:dataTable>
+              
+        </div>
+             <span class="addToCard">   
+                 <a href="#" ><div style="font-family:Verdana, Geneva, sans-serif; font-weight:bold; font-size: 15px; position: absolute; left: 18px; top: 9px;" >ADD TO CART&nbsp;&nbsp;$#{myAlbum.price}</div></a>    
+             </span>
+             
+   </h:form>   
 </div>
         
  </div>

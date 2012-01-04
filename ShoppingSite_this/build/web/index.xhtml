@@ -201,7 +201,7 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
         <h:column>
             <f:facet name="header">Artist Name</f:facet>
             <span class="artist">
-                <h:commandLink style="margin-right: 7px;" onmouseover="ShowPicture('#{music.title}',1)" onmouseout="ShowPicture('#{music.title}',0)" value="#{music.artistName}"/>
+                <h:commandLink action="#{myMusic.setInfoAlbum}" style="margin-right: 7px;" onmouseover="ShowPicture('#{music.title}',1)" onmouseout="ShowPicture('#{music.title}',0)" value="#{music.artistName}"/>
             </span>
         </h:column>
         <h:column>
