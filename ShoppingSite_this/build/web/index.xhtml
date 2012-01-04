@@ -1,0 +1,327 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="resources/countries.js"></script>
+<script>
+
+function showAdd(){
+	$("#addUser").dialog({show:'slide',position:'center',modal:true,width:400});
+}
+
+function sendData (v){
+	isValidEmail(v);
+}
+
+function isValidEmail(strEmail){
+  validRegExp = /^[^@]+@[^@]+.[a-z]{2,}$/i;
+  strEmail = document.forms[0].txtEmail.value;
+
+    if (strEmail.search(validRegExp) == -1) 
+   {
+      alert('A valid e-mail address is required.\nPlease amend and retry');
+      return false;
+    } 
+    return true; 
+}
+
+
+<!-- 
+function ShowPicture(id,Source) { 
+if (Source=="1"){ 
+if (document.layers) document.layers[''+id+''].visibility = "show" 
+else if (document.all) document.all[''+id+''].style.visibility = "visible" 
+else if (document.getElementById) document.getElementById(''+id+'').style.visibility = "visible" 
+} 
+else 
+if (Source=="0"){ 
+if (document.layers) document.layers[''+id+''].visibility = "hide" 
+else if (document.all) document.all[''+id+''].style.visibility = "hidden" 
+else if (document.getElementById) document.getElementById(''+id+'').style.visibility = "hidden" 
+} 
+} 
+//--> 
+
+</script>
+        <title>CDStore AB</title>
+        <h:outputStylesheet library="css" name="index.css" />
+        <h:outputStylesheet library="css" name="table-style.css"  />
+    </h:head>
+    <h:body>
+<div id="wrapper">
+<div id="header">
+<div style="position:relative; float:left; margin-top:20px; margin-left:5px;">
+    <img src="resources/_img/Logo.png" height="82" width="309" />
+</div>
+<span id="logOutBtn">
+<a href="#"><div style="position:absolute; left:41px; top:5px;">Logout</div></a> 
+</span>
+<span id="basketBtn">
+<a href="#"><div style="position:absolute; left:41px; top:5px;">Username</div></a> 
+</span>
+</div>
+<div id="mainContent">
+  	   <div id="addUser" title="Create account" style="display:none">
+			
+			<form id="frmUser">
+			<fieldset>
+			<label for="fnName">First Name</label><br /> 
+			<input type="text" name="txtName" id="txtName" class="text ui-widget-content ui-corner-all" /><br />
+			
+			<label for="fnLastName">Last Name</label><br />
+			<input type="text" name="txtLastName" id="txtLastName" class="text ui-widget-content ui-corner-all" /><br />
+
+			<label for="fnStreetaddress">Street address</label><br />
+			<input type="text" name="txtStreetaddress" id="txtStreetaddress" class="text ui-widget-content ui-corner-all" /><br />
+
+			<label for="fnZIP">ZIP / Postal code</label><br />
+			<input type="text" name="txtZip" id="txtZip" class="text ui-widget-content ui-corner-all" /><br />
+
+			<label for="fnCity">City, State</label><br />
+			<input type="text" name="txtCity" id="txtCity" class="text ui-widget-content ui-corner-all" /><br />
+            
+			<label for="fnCountry">Country / Region</label><br />
+                        <select id="country" name="country" style="width:200px;" class="text ui-widget-content ui-corner-all"></select><br />
+			<script language="javascript">print_country("country")</script>
+			
+                        <label for="fnEmail">Email address</label><br />
+			<input type="text" name="txtEmail" id="txtEmail" class="text ui-widget-content ui-corner-all" /><br />
+            
+                        <label for="fnLogin">CDStore Login</label><br />
+			<input type="text" name="txtLogin" id="txtLogin" class="text ui-widget-content ui-corner-all" /><br>
+            
+                        <label for="fnPassword">Create your password</label><br />
+			<input type="password" name="txtPassword" id="txtPassword" class="text ui-widget-content ui-corner-all" /><br />
+            
+                        <label for="fnRePassword">Re-enter your password</label><br />
+			<input type="password" name="txtRePassword" id="txtRePassword" class="text ui-widget-content ui-corner-all" /><br />
+                        </br>
+			<input type="button" id="btnLaggTill" value="Create account" onClick="sendData(this)" />
+                        </fieldset>
+			</form>
+
+			</div>	
+<div id="searchBG">
+<div id="searchField">
+<img src="resources/_img/searchTag.png" width="26" height="19" style="position:absolute; left:10px; top:7px;"/>
+<input type="text" size="40" value="Type your search here" onFocus="javascript:this.value=''" style="position:absolute; left:34px; top:5px; border:hidden; font-size:14px;" />
+<span id="searchBtn">
+<a href="#"><div style="margin-left:-5px; margin-top:4px;">Search</div></a>
+</span>
+</div>
+<div id="userField">
+<img src="resources/_img/loginTag.png" width="18" height="20" style="position:absolute; left:7px; top:3px;"/>
+<input type="text" size="14px" value="Username" onFocus="javascript:this.value=''" style="position:absolute; border:none; top:7px; left:25px;"/>
+</div>
+<div id="passwField">
+<img src="resources/_img/passwTag.png" width="22" height="19" style="position:absolute; left:7px; top:5px;"/>
+<input type="password" size="14px" value="Password" onFocus="javascript:this.value=''" style="position:absolute; border:none; top:7px; left:27px;"/>
+</div>
+<span id="loginBtn">
+<a href="#"><div style="margin-left:-11px; margin-top:6px;">Login</div></a>
+</span>
+<span id="accountBtn">
+<a href="#" onclick="showAdd()">Create account</a>
+</span>
+</div>
+<div id="lefContent">
+    
+<div id="topBG">
+<p><div style="position:absolute; left:10px; top:7px;">Categories</div></p>
+</div>
+    <h:form>
+<span class="categorie">
+    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Classical" action="#{myMusic.setMusicLink('Classical')}" />
+</span>
+    
+<span class="categorie">
+    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Country" action="#{myMusic.setMusicLink('Country')}" />
+</span>
+<span class="categorie">
+    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Hip-Hop" action="#{myMusic.setMusicLink('Hip-Hop')}" />
+</span>
+<span class="categorie">
+  <h:commandLink style="margin-left:7px; margin-top:8px;" value="Jazz" action="#{myMusic.setMusicLink('Jazz')}" />
+</span>
+<span class="categorie">
+    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Pop" action="#{myMusic.setMusicLink('Pop')}" />
+</span>
+<span class="categorie">
+    <h:commandLink style="margin-left:7px; margin-top:8px;" value="Rock" action="#{myMusic.setMusicLink('Rock')}" />
+</span>
+</h:form>        
+        
+<div id="specialOffer">
+<p><div style="position:absolute; left:10px; top:7px;">Special offer</div></p>
+</div>
+<div id="specialOfferBG">
+<div id="imgBG">
+<img src="http://www.theaquinian.net/wp-content/uploads/2010/03/STU_Jazz_cd.jpg" width="100px" height="100px" style="margin-top:15px; margin-left:15px;" />
+</div>
+<span>
+<a href="#">29:90 SEK</a>
+</span>
+</div>
+<div id="contactBG">
+<p><div style="position:absolute; left:10px; top:7px;">Contat info</div></p>
+</div>
+<div id="contact">
+<img src="resources/_img/telTagg.png" height="23" width="26" style="margin-top:15px; margin-left:5px;"/>
+<p><div style="position:absolute; top:17px; left:50px; font-family:Verdana, Geneva, sans-serif; font-style:italic; color:#666;">023 - 12345</div></p>
+<img src="resources/_img/emailTagg.png" height="23" width="26" style="margin-top:15px; margin-left:5px;"/>
+<span id="mailTo">
+<a href="mailto:info@cdstore.com">info@cdstore.com</a>
+</span>
+<img src="resources/_img/adressTagg.png" height="23" width="26" style="position:absolute; top:88px; left:5px;" />
+<p><div style="position:absolute; top:86px; left:50px; font-family:Verdana, Geneva, sans-serif; font-style:italic; color:#666;">CDstore AB</div></p>
+<p><div style="position:absolute; top:112px; left:50px; font-family:Verdana, Geneva, sans-serif; font-style:italic; color:#666;">Cdvägen 12 A</div></p>
+<p><div style="position:absolute; top:138px; left:50px; font-family:Verdana, Geneva, sans-serif; font-style:italic; color:#666;">791 71 Falun</div></p>
+</div>
+
+</div>
+<div id="centerContent">
+
+<div id="headBG">
+    <h:form>
+<p><div style="position:absolute; left:10px; top:7px;">#{myMusic.musicCategory}</div></p>
+</h:form>
+</div>
+    <div id="centerCatBG">
+     <div style=" overflow:auto; width:410px; margin-left:7px; height:auto">
+         <h:form>
+         <h:dataTable id="rTable" value="#{myMusic.music}" var="music" styleClass="order-table"
+    			headerClass="order-table-header"
+    			rowClasses="order-table-odd-row,order-table-even-row">
+            
+        <h:column>
+            <f:facet name="header">Artist Name</f:facet>
+            <span class="artist">
+                <h:commandLink style="margin-right: 7px;" onmouseover="ShowPicture('#{music.title}',1)" onmouseout="ShowPicture('#{music.title}',0)" value="#{music.artistName}"/>
+            </span>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Title</f:facet>
+            #{music.title}
+        </h:column>
+         <h:column>
+            <f:facet name="header">Category</f:facet>
+            #{music.category}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Price</f:facet>
+            #{music.price}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Buy</f:facet>
+            <h:commandButton value="Buy"/>
+        </h:column>
+             <h:column>
+                 <div style=" position:absolute; z-index: 1; visibility:hidden; border:solid 1px #CCC; padding:5px; " id="#{music.title}">
+                     <h:graphicImage width="150px" height="150px" value="http://users.du.se/~h09tobta/ShoppingSiteBilder/#{music.imageName}"/>     
+             </div>    
+          </h:column>       
+        </h:dataTable>
+             
+             </h:form>
+         
+</div>
+        
+ </div>
+</div>
+<div id="rightContent">
+<div id="cartBG">
+<p><div style="position:absolute; left:10px; top:7px;">Cart</div></p>
+</div>
+<div id="cart">
+    <img src="resources/_img/cartTagg.png" alt="Basket" width="50" height="42" style="margin-left:17px; margin-top:15px;"/>
+<p style="position:absolute; top:22px; left:85px; color:#F00; font-family: Trebuchet MS, Arial, Helvetica, sans-serif; font-size:18px">0 items</p>
+<span id="checkoutBtn">
+<a href="#"><div style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#000; position:absolute; left:12px; top:3px;">Checkout</div></a>
+</span>
+<p style="font-family:Verdana, Geneva, sans-serif; font-style:italic; font-size:12px; color:#666; margin-left:15px; margin-top:15px; visibility:visible;">You currently have no items in your cart.</p>
+</div>
+<div id="paymentBG">
+<p><div style="position:absolute; left:10px; top:7px;">Payment methods</div></p>
+</div>
+<div id="payment">
+<img src="resources/_img/Mastercard.png" width="50" height="31" style="margin-left:10px; margin-top:5px;"/>
+<img src="resources/_img/Visa.png" width="50" height="31" style="margin-left:10px; margin-top:5px;"/>
+<img src="resources/_img/PayPal.png" width="50" height="31" style="margin-left:10px; margin-top:5px;"/>
+<p style="margin-left:10px; margin-top:20px; color:#666; font-size:12px font-family:'Trebuchet MS', Arial, Helvetica, sans-serif;">These payment methods are available for this page.</p>
+</div>
+<div id="customerServiceBG">
+<p><div style="position:absolute; left:10px; top:7px;">Customer Service</div></p>
+</div>
+<div id="customerService">
+<ul>
+<li>
+<span class="costumerLink">
+<a href="#">New Customer</a>
+</span>
+</li>
+<li>
+<span class="costumerLink">
+<a href="#">How to Buy</a>
+</span>
+</li>
+<li>
+<span class="costumerLink">
+<a href="#">Contact customer Service</a>
+</span>
+</li>
+<li>
+<span class="costumerLink">
+<a href="#">Work Here</a>
+</span>
+</li>
+</ul>
+</div>
+<div id="newsBG">
+<p><div style="position:absolute; left:10px; top:7px;">Newsletter</div></p>
+</div>
+<div id="news">
+<p>Enter your email below to get the CDstore Newsletter delivered to your inbox.</p>
+<br />
+<input type="text" />
+<input type="button" value="Send" />
+</div>
+</div>
+<div id="footer">
+<div id="backGround">
+<div style="float:left; margin-left:15px; margin-top:8px; width:140px; text-align:left;">
+<span class="footerLink">
+<a href="#">Costumer Service</a>
+</span>
+<span class="footerLink">
+<a href="#">About CDStore</a>
+</span>
+<span class="footerLink">
+<a href="#">Privacy Policy</a>
+</span>
+</div>
+<div style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; position:absolute; top:8px; left:390px;">
+<p>© 2011-2012, CDStore AB</p>
+</div>
+<div style="float:right; margin-right:15px; margin-top:8px; width:140px; text-align:right;">
+<span class="footerLink">
+<a href="#">Shipping Rates</a>
+</span>
+<span class="footerLink">
+<a href="#">Press Releases</a>
+</span>
+<span class="footerLink">
+<a href="#">Help</a>
+</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+    </h:body>
+</html>
+
