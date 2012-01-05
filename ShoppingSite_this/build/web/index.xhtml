@@ -15,7 +15,9 @@ function showAdd(){
 }
 
 function sendData (v){
-	isValidEmail(v);
+    
+    isValidEmail(v)
+
 }
 
 function isValidEmail(strEmail){
@@ -66,46 +68,75 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
 </span>
 </div>
 <div id="mainContent">
-  	   <div id="addUser" title="Create account" style="display:none">
-			
-			<form id="frmUser">
-			<fieldset>
-			<label for="fnName">First Name</label><br /> 
-			<input type="text" name="txtName" id="txtName" class="text ui-widget-content ui-corner-all" /><br />
-			
-			<label for="fnLastName">Last Name</label><br />
-			<input type="text" name="txtLastName" id="txtLastName" class="text ui-widget-content ui-corner-all" /><br />
+  	<div id="addUser" title="Create account" style="display:none">
+        <!--      Create User Account form     -->
+			<h:form id="frmUser">
+                            <fieldset>
+                            <label for="fnName">First Name</label><br />
+                            <h:inputText id="txtName" styleClass="text ui-widget-content ui-corner-all" value="#{user.firstName}">
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br />
 
-			<label for="fnStreetaddress">Street address</label><br />
-			<input type="text" name="txtStreetaddress" id="txtStreetaddress" class="text ui-widget-content ui-corner-all" /><br />
+                            <label for="fnLastName">Last Name</label><br />
+                            <h:inputText value="#{user.lastName}" id="txtLastName" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br />
 
-			<label for="fnZIP">ZIP / Postal code</label><br />
-			<input type="text" name="txtZip" id="txtZip" class="text ui-widget-content ui-corner-all" /><br />
+                            <label for="fnStreetaddress">Street address</label><br />
+                            <h:inputText value="#{user.streetAddress}" id="txtStreetaddress" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br />
 
-			<label for="fnCity">City, State</label><br />
-			<input type="text" name="txtCity" id="txtCity" class="text ui-widget-content ui-corner-all" /><br />
-            
-			<label for="fnCountry">Country / Region</label><br />
-                        <select id="country" name="country" style="width:200px;" class="text ui-widget-content ui-corner-all"></select><br />
-			<script language="javascript">print_country("country")</script>
-			
-                        <label for="fnEmail">Email address</label><br />
-			<input type="text" name="txtEmail" id="txtEmail" class="text ui-widget-content ui-corner-all" /><br />
-            
-                        <label for="fnLogin">CDStore Login</label><br />
-			<input type="text" name="txtLogin" id="txtLogin" class="text ui-widget-content ui-corner-all" /><br>
-            
-                        <label for="fnPassword">Create your password</label><br />
-			<input type="password" name="txtPassword" id="txtPassword" class="text ui-widget-content ui-corner-all" /><br />
-            
-                        <label for="fnRePassword">Re-enter your password</label><br />
-			<input type="password" name="txtRePassword" id="txtRePassword" class="text ui-widget-content ui-corner-all" /><br />
-                        </br>
-			<input type="button" id="btnLaggTill" value="Create account" onClick="sendData(this)" />
-                        </fieldset>
-			</form>
+                            <label for="fnZIP">ZIP / Postal code</label><br />
+                            <h:inputText value="#{user.zipCode}" id="txtZip" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br />
 
-			</div>	
+                            <label for="fnCity">City, State</label><br />
+                            <h:inputText value="#{user.city}" id="txtCity" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br />
+
+                            <label for="fnCountry">Country / Region</label><br />
+                            <h:selectOneMenu id="country" style="width:200px;" styleClass="text ui-widget-content ui-corner-all" value="#{user.country}" >
+                                <f:selectItems value="#{countries.countries}" />
+                            </h:selectOneMenu>
+                            <br />
+                            
+                            <label for="fnEmail">Email address</label><br />
+                            <h:inputText value="#{user.email}" id="txtEmail" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br />
+
+                            <label for="fnLogin">CDStore Login</label><br />
+                            <h:inputText value="#{user.userName}" id="txtLogin" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br />
+
+                            <label for="fnPassword">Create your password</label><br />
+                            <h:inputText value="#{user.password1}" id="txtPassword" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br />
+
+                            <label for="fnRePassword">Re-enter your password</label><br />
+                            <h:inputText value="#{user.password2}" id="txtRePassword" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br />
+
+                            <h:commandButton id="btnLaggTill" value="Create account" onclick="sendData(this)" action="#{user.createUserAction}" />
+                            </fieldset>
+			</h:form>
+        <!--               End                 -->
+	</div>	
 <div id="searchBG">
 <div id="searchField">
 <img src="resources/_img/searchTag.png" width="26" height="19" style="position:absolute; left:10px; top:7px;"/>

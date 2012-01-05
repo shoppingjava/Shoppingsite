@@ -5,4 +5,5 @@
   <table-filter match-name="music_tracks"/>
   <table-filter match-name="music_categories"/>
   <table-filter match-name="music_recordings"/>
+  <table-filter match-name="users"/>
 </hibernate-reverse-engineering>

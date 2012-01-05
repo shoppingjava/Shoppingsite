@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2012-jan-04 23:15:20 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="HibernateShopping.Users" table="users" catalog="music_ik2002">
+        <id name="userId" type="java.lang.Integer" unsaved-value="-1">
+            <column name="user_id" />
+            <generator class="increment" />
+        </id>
+        <property name="userName" type="string">
+            <column name="user_name" length="75" not-null="false" />
+        </property>
+        <property name="userPass" type="string">
+            <column name="user_pass" length="75" not-null="false" />
+        </property>
+        <property name="firstname" type="string">
+            <column name="firstname" length="75" />
+        </property>
+        <property name="lastname" type="string">
+            <column name="lastname" length="75" />
+        </property>
+        <property name="streetaddress" type="string">
+            <column name="streetaddress" length="75" />
+        </property>
+        <property name="zip" type="string">
+            <column name="zip" length="75" />
+        </property>
+        <property name="city" type="string">
+            <column name="city" length="75" />
+        </property>
+        <property name="country" type="string">
+            <column name="country" length="75" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="75" />
+        </property>
+    </class>
+</hibernate-mapping>
