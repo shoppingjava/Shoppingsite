@@ -558,14 +558,13 @@ h2{
 
 .addToCard a{
         position: relative;
-	background:url(_img/addToCardBtn.png) no-repeat;
 	width:214px;
 	height:40px;
 	display: block;
         margin-left: 5px;
         margin-top: 12px;
 	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-	font-size:12px;
+	font-size:10px;
 	text-decoration:none;
 	color:#FFF;	
 }

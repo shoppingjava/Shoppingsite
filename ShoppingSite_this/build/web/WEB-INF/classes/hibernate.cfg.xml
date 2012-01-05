@@ -13,5 +13,6 @@
     <mapping resource="HibernateShopping/MusicCategories.hbm.xml"/>
     <mapping resource="HibernateShopping/MusicTracks.hbm.xml"/>
     <mapping resource="HibernateShopping/MusicRecordings.hbm.xml"/>
+    <mapping resource="HibernateShopping/Users.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

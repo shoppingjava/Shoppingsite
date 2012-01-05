@@ -48,12 +48,13 @@ public class MusicController {
        } 
        return musicTitles;
     }
-    
+    //Sätter musikkategori
     public static void setCategorie (String cat){
         category = cat;
     } 
-    
+    //Körs för att få mer info om ett album
     public void setInfoAlbum () throws IOException{
+        //Hämtar valt album
         music = (MusicRecordings) getMusic().getRowData();
         Album.setArtistName(music.getArtistName());
         Album.setCategory(music.getCategory());

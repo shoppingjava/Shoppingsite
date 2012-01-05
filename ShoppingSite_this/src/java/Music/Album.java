@@ -11,6 +11,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.servlet.http.HttpSession;
@@ -31,6 +33,9 @@ public class Album {
      static Integer numTracks;
      static Float price;
      static Integer stockCount;
+     static Integer quantity = 1;
+     Float sumQuantity;
+
     
     ShoppingSiteHelper helper;
     MusicTracks music;
@@ -126,6 +131,37 @@ public class Album {
             return "resources/_img/yesStockTagg.png";
         }
     }
+    
+    public void chnQantity (AjaxBehaviorEvent event){
+        System.out.println(quantity);
+        sumQuantity = price * quantity;
+        
+    }
+    
+      public Float getSumQuantity() {
+        return sumQuantity;
+    }
+
+    public void setSumQuantity(Float sumQuantity) {
+        this.sumQuantity = sumQuantity;
+    }
+    
+    public void setQuantity (int q){
+        quantity = q;
+    }
+    
+     public int getQuantity (){
+        return quantity;
+    }
+    //Lägger till valt album till kundvagn
+    public void addItem (){
+        Basket.addItem(recordingId, artistName, title, imageName, price, stockCount, quantity); 
+    }
+    
+    public boolean getItem (){
+       return false;
+    }
+    
     //Körs om användaren väljer kategori. Sätter kategori och visar index sidan
     public void toIndex (String myCategory) throws IOException{
         MusicController.setCategorie(myCategory);
