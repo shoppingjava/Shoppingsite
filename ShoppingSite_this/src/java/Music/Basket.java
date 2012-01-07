@@ -5,8 +5,6 @@
 package Music;
 
 import Music.BasketItem;
-import java.util.ArrayList;
-import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -47,18 +45,18 @@ public class Basket {
         Items.setCountItems(items);
     }
     //Lägger till album i kundvagn
-    public static void addItem (int recordingId, String artistName, String title, String imageName, Float price, Integer stockCount, Integer quantity){
-        BasketItem item = new BasketItem();
+    public static void addItem (int recordingId, String artistName, String title, String imageName, Float price, Float sumQuantity, Integer stockCount, Integer quantity){
         BasketItem basketItem = new BasketItem();
         basketItem.setRecordingId(recordingId);
         basketItem.setArtistName(artistName);
         basketItem.setTitle(title);
         basketItem.setImageName(imageName);
         basketItem.setPrice(price);
+        basketItem.setSumQuantity(sumQuantity);
         basketItem.setStockCount(stockCount);
         basketItem.setQuantity(quantity);
         Items.addCountItems();
-        Items.setItem(item);
+        Items.setItem(basketItem);
     }
     
 }

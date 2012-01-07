@@ -13,6 +13,15 @@ public class BasketItem {
     private Float price;
     private Integer stockCount;
     private Integer quantity;
+    private Float sumQuantity;
+
+    public Float getSumQuantity() {
+        return sumQuantity;
+    }
+
+    public void setSumQuantity(Float sumQuantity) {
+        this.sumQuantity = sumQuantity;
+    }
 
     public String getArtistName() {
         return artistName;

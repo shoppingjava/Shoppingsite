@@ -573,3 +573,30 @@ h2{
 	background-position:left bottom;
 	color:#ff9900;
 }
+
+.one-column-emphasis tr:hover td{
+    color:#339;
+    background:#eff2ff;
+}
+
+.one-column-emphasis{
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; 
+    font-size:14px;
+    width:410px;
+    text-align:left;
+    border-collapse:collapse;
+}
+
+.one-column-emphasis th{
+    font-size:14px;
+    font-weight:normal;
+    color:#039;
+    padding:12px 15px;
+}
+
+.one-column-emphasis td{
+    color:#669;
+    border-top:1px solid #e8edff;
+    padding:9px 6px;
+}
+
