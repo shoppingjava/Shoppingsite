@@ -517,3 +517,95 @@ h2{
   border:solid 1px #CCC; 
   padding:5px; 
 }
+
+#one-column-emphasis tr:hover td{
+    color:#339;
+    background:#eff2ff;
+}
+
+#one-column-emphasis{
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; 
+    font-size:18px;
+    width:410px;
+    text-align:left;
+    border-collapse:collapse;
+}
+
+#one-column-emphasis th{
+    font-size:18px;
+    font-weight:normal;
+    color:#039;
+    padding:12px 15px;
+}
+
+#one-column-emphasis td{
+    color:#669;
+    border-top:1px solid #e8edff;
+    padding:10px 15px;
+}
+.oce-first{
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; 
+    font-size: 20px; 
+    color:#F00;
+    border-right:10px solid transparent;
+    border-left:10px solid transparent;
+}
+
+#one-column-emphasis tr:hover td{
+    color:#339;
+    background:#eff2ff;
+}
+
+.addToCard a{
+        position: relative;
+	width:214px;
+	height:40px;
+	display: block;
+        margin-left: 5px;
+        margin-top: 12px;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size:10px;
+	text-decoration:none;
+	color:#FFF;	
+}
+
+.addToCard a:hover{
+	background-position:left bottom;
+	color:#ff9900;
+}
+
+.one-column-emphasis tr:hover td{
+    color:#339;
+    background:#eff2ff;
+}
+
+.one-column-emphasis{
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; 
+    font-size:14px;
+    width:410px;
+    text-align:left;
+    border-collapse:collapse;
+}
+
+.one-column-emphasis th{
+    font-size:14px;
+    font-weight:normal;
+    color:#039;
+    padding:12px 15px;
+}
+
+.one-column-emphasis td{
+    color:#669;
+    border-top:1px solid #e8edff;
+    padding:9px 6px;
+}
+
+#welcomeTxt {
+    position:absolute;
+    margin-left:575px;
+    margin-top:-30px;
+    height: 40px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    color: white;
+}
