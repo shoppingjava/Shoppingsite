@@ -6,8 +6,10 @@ package Login;
 
 import HibernateShopping.HibernateUtil;
 import java.io.Serializable;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -59,6 +61,9 @@ public class LoginBean implements Serializable {
                                                     + "AND user_pass = '"+password+"'");
             
             if ( q.list().isEmpty()) { // Om username inte finns eller om password ej stämmer
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                FacesMessage facesMessage = new FacesMessage("Couldn't log in, check username and password");
+                facesContext.addMessage("statusForm:statusText", facesMessage);
                 setUserName("");
                 setPassword("");
                 setAuth(false);

@@ -100,6 +100,13 @@ h2{
 	padding-bottom: 86px;
 } 
 
+#mainContent #statusDiv{
+    position:relative;
+    width:inherit;
+    height:30px;
+    float:inherit;
+}
+
 #mainContent #searchBG{
 	position:relative;
 	width:920px;
@@ -304,7 +311,7 @@ h2{
 #mainContent #centerContent{
 	position:relative;
 	height:auto;
-	margin-top:100px;
+	margin-top:71px;
 	width:420px;
 	margin-left:270px;
 	text-align:left;

@@ -88,15 +88,21 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
 			<h:form id="frmUser">
                             <fieldset>
                             <label for="fnName">First Name</label><br />
-                            <h:inputText id="txtName" styleClass="text ui-widget-content ui-corner-all" value="#{createUser.firstName}">
+                            <h:inputText id="txtName" validator="#{createUser.validateName}" styleClass="text ui-widget-content ui-corner-all" value="#{createUser.firstName}">
                                 <f:validateRequired />
+                                <f:ajax event="keyup" render="fNameError" />
                             </h:inputText>
+                            <br />
+                            <h:message id="fNameError" for="txtName" style="color: red" />
                             <br />
 
                             <label for="fnLastName">Last Name</label><br />
-                            <h:inputText value="#{createUser.lastName}" id="txtLastName" styleClass="text ui-widget-content ui-corner-all" >
+                            <h:inputText value="#{createUser.lastName}" validator="#{createUser.validateName}" id="txtLastName" styleClass="text ui-widget-content ui-corner-all" >
                                 <f:validateRequired />
+                                <f:ajax event="keyup" render="lNameError" />
                             </h:inputText>
+                            <br />
+                            <h:message id="lNameError" for="txtLastName" style="color: red" />
                             <br />
 
                             <label for="fnStreetaddress">Street address</label><br />
@@ -124,33 +130,41 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
                             <br />
                             
                             <label for="fnEmail">Email address</label><br />
-                            <h:inputText value="#{createUser.email}" id="txtEmail" styleClass="text ui-widget-content ui-corner-all" >
+                            <h:inputText value="#{createUser.email}" validator="#{createUser.validateEmail}" id="txtEmail" styleClass="text ui-widget-content ui-corner-all" >
                                 <f:validateRequired />
+                                <f:ajax event="keyup" render="emailError" />
                             </h:inputText>
+                            <br />
+                            <h:message id="emailError" for="txtEmail" style="color: red" />
                             <br />
 
                             <label for="fnLogin">CDStore Login</label><br />
-                            <h:inputText value="#{createUser.userName}" id="txtLogin" styleClass="text ui-widget-content ui-corner-all" >
+                            <h:inputText value="#{createUser.userName}" validator="#{createUser.validateUserName}" id="txtLogin" styleClass="text ui-widget-content ui-corner-all" >
                                 <f:validateRequired />
+                                <f:ajax event="keyup" render="userError" />
                             </h:inputText>
                             <br />
-
+                            <h:message id="userError" for="txtLogin" style="color: red" />
+                            <br />
+                            
                             <label for="fnPassword">Create your password</label><br />
-                            <h:inputSecret value="#{createUser.password1}" id="txtPassword" styleClass="text ui-widget-content ui-corner-all" >
-                                <f:validateRequired />
+                            <h:inputSecret validator="#{createUser.validatePassword1}" value="#{createUser.password1}" id="txtPassword" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:ajax event="keyup" render="passwordError" />
                             </h:inputSecret>
                             <br />
 
                             <label for="fnRePassword">Re-enter your password</label><br />
-                            <h:inputSecret value="#{createUser.password2}" id="txtRePassword" styleClass="text ui-widget-content ui-corner-all" >
-                                <f:validateRequired />
+                            <h:inputSecret validator="#{createUser.validatePassword2}" value="#{createUser.password2}" id="txtRePassword" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:ajax event="keyup" render="passwordError" />
                             </h:inputSecret>
                             <br />
-
+                            <h:message id="passwordError" for="txtRePassword" style="color: red" />
+                            <br />
                             <h:commandButton id="btnLaggTill" value="Create account" onclick="sendData(this)" action="#{createUser.createUserAction}" />
                             </fieldset>
 			</h:form>
         <!--               End                 -->
+
            </div>
         </c:if>
 <div id="searchBG">
@@ -193,6 +207,12 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
     </span>
     </c:if>
 </div>
+<h:form id="statusForm">
+    <div id="statusDiv"  title="Create Account">
+        <h:inputText id="statusText" style="display:none" />
+        <h:message for="statusText" />
+    </div>
+</h:form>
 <div id="lefContent">
     
 <div id="topBG">
