@@ -48,6 +48,20 @@ public class Items {
         basketItems = new ListDataModel(item);
         return basketItems;
     }
+    //Tar bort samtliga items ur kundvagn
+    public static void deleteItems (){
+        item.clear();
+        countItems = 0;
+    }
+    //Hämtar den totala summan avsedd paypal betalning
+    public static float getTotalSumPay() {
+        float sum = 0;
+        for (int i = 0; i < item.size(); i++) {
+            sum = sum + item.get(i).getSumQuantity();
+        }
+        return sum;
+    }
+    
     //Beräknar den totala summan på samtliga varor
     public float getTotalSum() {
         float sum = 0;
@@ -57,10 +71,10 @@ public class Items {
         return sum;
     }
     //Laddar om sidan
-    private void reloadBasket() throws IOException {
+    private void reloadBasket(String page) throws IOException {
+        Order.Order.userValue = "";
         HttpSession ses = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-        String url = "basket.xhtml";
-        FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+        FacesContext.getCurrentInstance().getExternalContext().redirect(page);
     }
     //Tar bort specifik vara
     public void deleteItem() throws IOException {
@@ -68,15 +82,16 @@ public class Items {
         int i = item.indexOf(myBasket);
         item.remove(i);
         deleteCountItems();
-        reloadBasket();
+       // reloadBasket();
     }
     //Ändrar antalet för en specifik vara   
-    public void chnQantity(AjaxBehaviorEvent event, int id, int q) throws IOException {
+    public void chnQantity(AjaxBehaviorEvent event, int id, int q, String page) throws IOException {
+        
         for (int i = 0; i < item.size(); i++) {
             if (item.get(i).getRecordingId() == id) {
                 item.get(i).setSumQuantity(item.get(i).getPrice() * q);
             }
         }
-        reloadBasket();
+        reloadBasket(page);
     }
 }

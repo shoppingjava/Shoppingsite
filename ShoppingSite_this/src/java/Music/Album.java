@@ -136,9 +136,9 @@ public class Album {
     //Körs när användaren ändrar antalet på en spcifik vara   
 
     public void chnQantity(AjaxBehaviorEvent event) throws IOException {
+        Order.Order.userValue = "";
         try {
-            int i = Integer.parseInt(quantity);
-
+            int i = Integer.parseInt(quantity);  
             HttpSession ses = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
             String url = "album.xhtml";
             FacesContext.getCurrentInstance().getExternalContext().redirect(url);
@@ -149,7 +149,7 @@ public class Album {
 
 
     }
-    
+    //Hämtar ny summa efter att antal förändrats
     public Float getSumQuantity() {
         int q = Integer.parseInt(quantity);
         sumQuantity = price * q;
@@ -180,6 +180,7 @@ public class Album {
 
     //Körs om användaren väljer kategori. Sätter kategori och visar index sidan
     public void toIndex(String myCategory) throws IOException {
+        Order.Order.userValue = "";
         MusicController.setCategorie(myCategory);
         HttpSession ses = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         String url = "index.xhtml";

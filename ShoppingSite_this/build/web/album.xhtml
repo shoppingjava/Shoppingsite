@@ -2,6 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:h="http://java.sun.com/jsf/html">
     <h:head>
      <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
@@ -9,6 +10,16 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" src="resources/countries.js"></script>
 <script>
+
+var variableFromServer = '#{myOrder.userValue}';
+            checkUser(variableFromServer);
+            function checkUser(variable) {
+                if(variable == "true"){
+                     var mess = 'You must login before you can checkout!'
+                    alert(mess);  
+                    
+                }              
+            }
 
 function showAdd(){
 	$("#addUser").dialog({show:'slide',position:'center',modal:true,width:400});
@@ -58,13 +69,63 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
 <div style="position:relative; float:left; margin-top:20px; margin-left:5px;">
     <img src="resources/_img/Logo.png" height="82" width="309" />
 </div>
-  <h:form>
-<span id="logOutBtn">
-<a href="#"><div style="position:absolute; left:41px; top:5px;">Logout</div></a> 
-</span>
+    <h:form>
+<c:if test="#{login.auth}">
+    <span id="logOutBtn" >
+        <h:commandLink value="Logout" action="#{login.logOut}" />
+    </span>
+</c:if>
+<c:if test="#{!login.auth}">
+    <span id="logOutBtn" style=" visibility: hidden;" >
+        <h:commandLink value="Logout" action="#{login.logOut}" />
+    </span>
+</c:if>
 <span id="basketBtn">
-    <h:commandLink value="" action="#{myMusic.linkBasket}" style="position:absolute; left:1px; top:32px;" />
+    <c:if test="#{login.auth == true}">
+        <h:commandLink value="#{login.userName}" action="#{myMusic.linkBasket}" onmouseover="ShowPicture('miniBasket',1)" onmouseout="ShowPicture('miniBasket',0)" style="position:absolute; left:1px; top:32px; font-size: 15px;" />
+    </c:if>
+    <c:if test="#{login.auth == false}">
+        <h:commandLink value="Guest" action="#{myMusic.linkBasket}" onmouseover="ShowPicture('miniBasket',1)" onmouseout="ShowPicture('miniBasket',0)" style="position:absolute; left:1px; top:32px; font-size: 15px;" />
+    </c:if>
 </span>
+        <div id="miniBasket" onmouseover="ShowPicture('miniBasket',1)" onmouseout="ShowPicture('miniBasket',0)" style="width:350px; visibility:hidden; position:fixed; border-radius: 7px; left: 1290px; z-index: 1; height: autopx; background:#FFF; float: right; display:block;">
+             <div style=" overflow:auto; width:350px; margin-left:5px; height:auto">
+         <h:form>
+         <h:dataTable id="rTable" value="#{myItems.basket}" var="item" styleClass="Minione-column-emphasis"
+    			headerClass="Minioce-first">
+            
+        <h:column>
+            <f:facet name="header">Artist Name</f:facet>
+            #{item.artistName}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Title</f:facet>
+            #{item.title}
+        </h:column>
+         <h:column>
+            <f:facet name="header">Qantity</f:facet>
+            <h:inputText  size="3" validatorMessage="Invalid character!" required="true" value="#{item.quantity}" id="quantity">
+                 <f:ajax event="change" listener="#{myItems.chnQantity(this, item.recordingId, item.quantity)}" />
+             </h:inputText>      
+        </h:column>
+             <h:column>
+            <f:facet name="header">Price</f:facet>
+            $#{item.sumQuantity}
+        </h:column>
+             <h:column>
+            <f:facet name="header">Delete</f:facet>
+            <h:commandButton value="Delete" action="#{myItems.deleteItem}" />
+        </h:column>
+        </h:dataTable>
+              <h:message for="quantity" />
+              <div class="Minione-column-emphasis">
+                  <p style="margin-left:245px; font-size: 14px; margin-top: 35px;">Sum: $#{myItems.totalSum}</p>
+                  <h:commandButton action="#{myOrder.yourOrder}" value="Checkout" style="margin-top: 20px; margin-left: 245px; margin-bottom: 15px;"/>
+              </div>
+             </h:form>
+         
+</div>
+        </div>
     </h:form>
 </div>
 <div id="mainContent">
@@ -138,29 +199,44 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
         <!--               End                 -->
            </div>
 <div id="searchBG">
+    
 <div id="searchField">
 <img src="resources/_img/searchTag.png" width="26" height="19" style="position:absolute; left:10px; top:7px;"/>
 <h:form>
-<h:inputText size="40" value="#{myMusic.searchString}" onfocus="javascript:this.value=''" style="position:absolute; left:34px; top:5px; border:hidden; font-size:14px;" />
+    <h:inputText id="searchTxt" size="40" required="true" value="#{myMusic.searchString}" onfocus="javascript:this.value=''" style="position:absolute; left:34px; top:5px; border:hidden; font-size:14px;" > 
+    </h:inputText>
+
 <span id="searchBtn">
     <h:commandLink value="Search" action="#{myMusic.searchMusic}" style="margin-left:-5px; margin-top:1px;" />
+   
 </span>
 </h:form>
+
 </div>
-<div id="userField">
-<img src="resources/_img/loginTag.png" width="18" height="20" style="position:absolute; left:7px; top:3px;"/>
-<input type="text" size="14px" value="Username" onFocus="javascript:this.value=''" style="position:absolute; border:none; top:7px; left:25px;"/>
-</div>
-<div id="passwField">
-<img src="resources/_img/passwTag.png" width="22" height="19" style="position:absolute; left:7px; top:5px;"/>
-<input type="password" size="14px" value="Password" onFocus="javascript:this.value=''" style="position:absolute; border:none; top:7px; left:27px;"/>
-</div>
-<span id="loginBtn">
-<a href="#"><div style="margin-left:-11px; margin-top:6px;">Login</div></a>
-</span>
-<span id="accountBtn">
-<a href="#" onclick="showAdd()">Create account</a>
-</span>
+    <c:if test="#{login.auth}">
+        <span id="welcomeTxt">
+            Welcome #{login.userName}!
+        </span>
+    </c:if>
+<c:if test="#{!login.auth}">
+    <h:form>
+        <div id="userField">
+            <img src="resources/_img/loginTag.png" width="18" height="20" style="position:absolute; left:7px; top:3px;"/>
+            <h:inputText size="14" value="#{login.userName}" onfocus="javascript:this.value=''" style="position:absolute; border:none; top:4px; left:25px;" />
+        </div>
+        <div id="passwField">
+            <img src="resources/_img/passwTag.png" width="22" height="19" style="position:absolute; left:7px; top:5px;"/>
+            <h:inputSecret size="14" value="#{login.password}" onfocus="javascript:this.value=''" style="position:absolute; border:none; top:4px; left:27px;" />        
+        </div>
+        <span id="loginBtn">
+            <h:commandLink style="margin-left: -11px; margin-top:1px;" value="Login&nbsp;&nbsp;" action="#{login.logIn}" />
+        </span>
+    </h:form>
+    
+    <span id="accountBtn">
+    <a href="#" onclick="showAdd()">Create account</a>
+    </span>
+    </c:if>
 </div>
 <div id="lefContent">
     
@@ -295,9 +371,9 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
     <img src="resources/_img/cartTagg.png" alt="Basket" width="50" height="42" style="margin-left:17px; margin-top:15px;"/>
 <h:commandLink action="#{myMusic.linkBasket}" value="#{myBasket.items} items" style="position:absolute; text-decoration: none; top:22px; left:85px; color:#F00; font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px"/>
 <span id="checkoutBtn">
-<a href="#"><div style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#000; position:absolute; left:12px; top:3px;">Checkout</div></a>
+<h:commandLink action="#{myOrder.yourOrder}" value="&nbsp;&nbsp;&nbsp;Checkout" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#000; position:absolute; left:0px; top:12px;"/>
 </span>
-<p style="font-family:Verdana, Geneva, sans-serif; font-style:italic; font-size:12px; color:#666; margin-left:15px; margin-top:15px; visibility:visible;">#{myBasket.itemMessage}</p>
+<p style="font-family:Verdana, Geneva, sans-serif; font-style:italic; font-size:12px; color:#666; margin-left:15px; margin-top:35px; visibility:visible;">#{myBasket.itemMessage}</p>
 </h:form>
 </div>
 <div id="paymentBG">

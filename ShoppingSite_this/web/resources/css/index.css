@@ -75,7 +75,7 @@ h2{
 }
 
 #header #basketBtn a:hover{
-	background-position:left bottom;
+	background-position:left bottom;       
 }
 
 #wrapper {
@@ -134,7 +134,7 @@ h2{
 	top:9.4px;
 	left:775px;
 	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-	font-size:12px;
+	font-size:14px;
 	text-decoration:none;
 	color:#000;
 	
@@ -551,6 +551,15 @@ h2{
     border-left:10px solid transparent;
 }
 
+.oce-first-chnCol{
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; 
+    font-size: 20px; 
+    background: #d0dafd;
+    color:#F00;
+    border-right:10px solid transparent;
+    border-left:10px solid transparent;
+}
+
 #one-column-emphasis tr:hover td{
     color:#339;
     background:#eff2ff;
@@ -600,3 +609,36 @@ h2{
     padding:9px 6px;
 }
 
+.Minione-column-emphasis{
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; 
+    font-size:12px;
+    width:290px;
+    text-align:left;
+    border-collapse:collapse;
+}
+
+.Minione-column-emphasis th{
+    font-size:12px;
+    font-weight:normal;
+    color:#039;
+    padding:12px 15px;
+}
+
+.Minione-column-emphasis td{
+    color:#669;
+    border-top:1px solid #e8edff;
+    padding:9px 6px;
+}
+
+.linkHover a{
+    font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; 
+    color:#BBBBBB;
+    text-decoration: none;
+}
+.linkHover a:hover{
+    color:#000;
+}
+
+.spaceRadio {
+    margin-bottom: 20px;
+}

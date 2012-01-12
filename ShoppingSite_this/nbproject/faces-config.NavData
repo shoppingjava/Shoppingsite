@@ -3,7 +3,9 @@
     <Scope Scope="Faces Configuration Only"/>
     <Scope Scope="Project">
         <Node id="index.xhtml" x="150" y="150" zoom="true"/>
+        <Node id="basket.xhtml" x="150" y="300" zoom="true"/>
         <Node id="album.xhtml" x="400" y="150" zoom="true"/>
+        <Node id="order.xhtml" x="650" y="150" zoom="true"/>
     </Scope>
     <Scope Scope="All Faces Configurations"/>
 </Scene>
