@@ -15,6 +15,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.faces.render.ResponseStateManager;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -36,9 +37,12 @@ public class MusicController {
     public MusicController() {
       helper = new ShoppingSiteHelper();
       musicList = helper.getMusicRecordings(category); 
+      ResponseStateManager rsm = FacesContext.getCurrentInstance().getRenderKit().getResponseStateManager();
+      
     }
     //Sätter musikkategori beroende på vilken kategori användaren väljer i leftContent
     public void setMusicLink (String category){
+        Order.Order.userValue = "";
         this.category = category;
     }
     //Musikkategori som visas i centercontent  
@@ -74,6 +78,7 @@ public class MusicController {
         Album.setTitle(music.getTitle());
         Album.setRecordingId(music.getRecordingId());
         Album.setNumTracks(music.getNumTracks());
+        Order.Order.userValue = "";
         HttpSession ses = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);   
         String url = "album.xhtml";
         FacesContext.getCurrentInstance().getExternalContext().redirect(url);
@@ -85,6 +90,7 @@ public class MusicController {
     }
     //Körs när användaren söker efter album
     public void searchMusic () throws IOException{
+        Order.Order.userValue = "";
         //Laddar om index sidan för att sökning skall kunna genomföras från samtliga html sidor
         HttpSession ses = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);   
         String url = "index.xhtml";

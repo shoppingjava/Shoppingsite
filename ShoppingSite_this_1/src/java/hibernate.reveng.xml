@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
-<hibernate-reverse-engineering>
-  <schema-selection match-catalog="music_ik2002"/>
-  <table-filter match-name="music_tracks"/>
-  <table-filter match-name="music_categories"/>
-  <table-filter match-name="music_recordings"/>
-  <table-filter match-name="users"/>
-</hibernate-reverse-engineering>

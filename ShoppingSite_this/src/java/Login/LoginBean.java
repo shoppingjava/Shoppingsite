@@ -18,7 +18,7 @@ import org.hibernate.Transaction;
 @SessionScoped
 public class LoginBean implements Serializable {
     
-    private String userName;
+    public static String userName;
     //<editor-fold defaultstate="collapsed" desc="Get/Set String userName">
     public void setUserName(String userName) {
         this.userName = userName;
@@ -39,7 +39,7 @@ public class LoginBean implements Serializable {
     //</editor-fold>
     
     // False om användaren inte är inloggad
-    private boolean auth = false;
+    public static boolean auth = false;
     //<editor-fold defaultstate="collapsed" desc="Get/Set boolean auth">
     public void setAuth(boolean auth) {
         this.auth = auth;
@@ -50,15 +50,18 @@ public class LoginBean implements Serializable {
     //</editor-fold>
     
     public String logIn() {
+        Order.Order.userValue = "";
         
         // Kollar om inmatat username och password finns i databasen
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             
-            tx = session.beginTransaction();
+            tx = session.beginTransaction(); // Öppnar en transaktion till DB
+            
+            // Skickar en förfrågan till DB med username samt ett krypterat lösenord
             Query q = session.createQuery ("from Users WHERE user_name = '"+userName+"' "
-                                                    + "AND user_pass = '"+password+"'");
+                                                    + "AND user_pass = '"+Utilities.MD5Encrypt.encryptPassw(password)+"'");
             
             if ( q.list().isEmpty()) { // Om username inte finns eller om password ej stämmer
                 FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -67,10 +70,10 @@ public class LoginBean implements Serializable {
                 setUserName("");
                 setPassword("");
                 setAuth(false);
-                return null;
+                return "index.xhtml";
             } else { // Om användaren finns i DB
                 setAuth(true);
-                return null;
+                return "index.xhtml";
             }
 
         } catch (Exception e) { 

@@ -106,5 +106,18 @@ public class ShoppingSiteHelper {
     return musicList;
 }
    
+    public List getUserData(String user){
+    List<Users> userList = null;
+    try {
+        org.hibernate.Transaction tx = session.beginTransaction();
+        Query q = session.createQuery ("from Users WHERE user_name ='" +user+"'");
+        userList = (List<Users>) q.list();
+        
+    } catch (Exception e) {
+        session.close();
+    }
+
+    return userList;
+}
 
 }

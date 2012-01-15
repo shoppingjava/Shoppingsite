@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://ws.audioscrobbler.com/2.0/?method=album.search&amp;album=tommyland&amp;api_key=15a1f7dd60f42924433b0998d0ec8b77" uri="src/conf/xml-resources/web-service-references/_method_album/wsdl/ws.audioscrobbler.com/2.0/.method_album.search_album_tommyland_api_key_15a1f7dd60f42924433b0998d0ec8b77.xml"/>
+    <system systemId="http://ws.cdyne.com/emailverify/Emailvernotestemail.asmx?wsdl" uri="src/conf/xml-resources/web-service-references/Emailvernotestemail/wsdl/ws.cdyne.com/emailverify/Emailvernotestemail.asmx.wsdl"/>
+    <system systemId="http://www.webservicex.net/ValidateEmail.asmx?WSDL" uri="src/conf/xml-resources/web-service-references/ValidateEmail_1/wsdl/www.webservicex.net/ValidateEmail.asmx.wsdl"/>
+    <system systemId="http://www.webservicex.com/CurrencyConvertor.asmx?wsdl" uri="src/conf/xml-resources/web-service-references/CurrencyConvertor/wsdl/www.webservicex.com/CurrencyConvertor.asmx.wsdl"/>
+    <system systemId="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl" uri="src/conf/xml-resources/web-service-references/AmazonWebServices/wsdl/soap.amazon.com/schemas3/AmazonWebServices.wsdl"/>
+    <system systemId="file:/C:/Users/Ante/.netbeans/7.1/config/WebServices/EmailVerify5/catalog/wsparam.strikeiron.com/EmailVerify5.wsdl" uri="src/conf/xml-resources/web-service-references/EmailVerify5/wsdl/EmailVerify5.wsdl"/>
+</catalog>

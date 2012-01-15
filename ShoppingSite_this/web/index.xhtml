@@ -10,10 +10,41 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" src="resources/countries.js"></script>
 <script>
+  var variableFromServer = '#{myOrder.userValue}';
+            checkUser(variableFromServer);
+            function checkUser(variable) {
+                if(variable == "true"){
+                     var mess = 'You must login before you can checkout!'
+                    alert(mess);  
+                    
+                }              
+            }
+            
 
 function showAdd(){
 	$("#addUser").dialog({show:'slide',position:'center',modal:true,width:400});
 }
+
+$(document).ready(function() {
+   /* <![CDATA[ */
+    $.ajax({
+    type: "POST",
+    url: "http://ws.audioscrobbler.com/2.0/?method=chart.gethypedartists&api_key=15a1f7dd60f42924433b0998d0ec8b77&format=json&limit=1",
+    data: "{}",
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success: function(msg) {
+
+        var name = msg["artists"]["artist"].name;
+        
+        var htmlString = "Top Artist this week: " + name;
+ 
+      // Insert the returned HTML into the
+      $('#topChart').html(htmlString);
+    }
+  });
+  /*]]>*/
+});
 
 function sendData (v){
 	isValidEmail(v);
@@ -32,7 +63,7 @@ function isValidEmail(strEmail){
 }
 
 
-<!-- 
+//<!-- 
 function ShowPicture(id,Source) { 
 if (Source=="1"){ 
 if (document.layers) document.layers[''+id+''].visibility = "show" 
@@ -53,6 +84,7 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
         <h:outputStylesheet library="css" name="index.css" />
         <h:outputStylesheet library="css" name="table-style.css"  />
     </h:head>
+    
     <h:body>
 <div id="wrapper">
 <div id="header">
@@ -65,6 +97,7 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
         <h:commandLink value="Logout" action="#{login.logOut}" />
     </span>
 </c:if>
+        
 <c:if test="#{!login.auth}">
     <span id="logOutBtn" style=" visibility: hidden;" >
         <h:commandLink value="Logout" action="#{login.logOut}" />
@@ -72,13 +105,51 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
 </c:if>
 <span id="basketBtn">
     <c:if test="#{login.auth == true}">
-        <h:commandLink value="#{login.userName}" action="#{myMusic.linkBasket}" style="position:absolute; left:1px; top:32px; font-size: 15px;" />
+        <h:commandLink value="#{login.userName}" action="#{myMusic.linkBasket}" onmouseover="ShowPicture('miniBasket',1)" onmouseout="ShowPicture('miniBasket',0)" style="position:absolute; left:1px; top:32px; font-size: 15px;" />
     </c:if>
     <c:if test="#{login.auth == false}">
-        <h:commandLink value="Guest" action="#{myMusic.linkBasket}" style="position:absolute; left:1px; top:32px; font-size: 15px;" />
+        <h:commandLink value="Guest" action="#{myMusic.linkBasket}" onmouseover="ShowPicture('miniBasket',1)" onmouseout="ShowPicture('miniBasket',0)" style="position:absolute; left:1px; top:32px; font-size: 15px;" />
     </c:if>
+    
 </span>
-   
+        <div id="miniBasket" onmouseover="ShowPicture('miniBasket',1)" onmouseout="ShowPicture('miniBasket',0)" style="width:350px; visibility:hidden; position:fixed; border-radius: 7px; left: 1290px; z-index: 1; height: autopx; background:#FFF; float: right; display:block;">
+             <div style=" overflow:auto; width:350px; margin-left:5px; height:auto">
+         <h:form>
+         <h:dataTable id="rTable" value="#{myItems.basket}" var="item" styleClass="Minione-column-emphasis"
+    			headerClass="Minioce-first">
+            
+        <h:column>
+            <f:facet name="header">Artist Name</f:facet>
+            #{item.artistName}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Title</f:facet>
+            #{item.title}
+        </h:column>
+         <h:column>
+            <f:facet name="header">Qantity</f:facet>
+            <h:inputText  size="3" validatorMessage="Invalid character!" required="true" value="#{item.quantity}" id="quantity">
+                 <f:ajax event="change" listener="#{myItems.chnQantity(this, item.recordingId, item.quantity)}" />
+             </h:inputText>      
+        </h:column>
+             <h:column>
+            <f:facet name="header">Price</f:facet>
+            $#{item.sumQuantity}
+        </h:column>
+             <h:column>
+            <f:facet name="header">Delete</f:facet>
+            <h:commandButton value="Delete" action="#{myItems.deleteItem}" />
+        </h:column>
+        </h:dataTable>
+              <h:message for="quantity" />
+              <div class="Minione-column-emphasis">
+                  <p style="margin-left:245px; font-size: 14px; margin-top: 35px;">Sum: $#{myItems.totalSum}</p>
+                  <h:commandButton action="#{myOrder.yourOrder}" value="Checkout" style="margin-top: 20px; margin-left: 245px; margin-bottom: 15px;"/>
+              </div>
+             </h:form>
+         
+</div>
+        </div>
     </h:form>
 </div>
 <div id="mainContent">
@@ -89,7 +160,7 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
                             <fieldset>
                             <label for="fnName">First Name</label><br />
                             <h:inputText id="txtName" validator="#{createUser.validateName}" styleClass="text ui-widget-content ui-corner-all" value="#{createUser.firstName}">
-                                <f:validateRequired />
+                                
                                 <f:ajax event="keyup" render="fNameError" />
                             </h:inputText>
                             <br />
@@ -98,7 +169,6 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
 
                             <label for="fnLastName">Last Name</label><br />
                             <h:inputText value="#{createUser.lastName}" validator="#{createUser.validateName}" id="txtLastName" styleClass="text ui-widget-content ui-corner-all" >
-                                <f:validateRequired />
                                 <f:ajax event="keyup" render="lNameError" />
                             </h:inputText>
                             <br />
@@ -106,21 +176,27 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
                             <br />
 
                             <label for="fnStreetaddress">Street address</label><br />
-                            <h:inputText value="#{createUser.streetAddress}" id="txtStreetaddress" styleClass="text ui-widget-content ui-corner-all" >
-                                <f:validateRequired />
+                            <h:inputText validator="#{createUser.validateNotEmpty}" value="#{createUser.streetAddress}" id="txtStreetaddress" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:ajax event="keyup" render="sAddressError" />
                             </h:inputText>
                             <br />
-
+                            <h:message id="sAddressError" for="txtStreetaddress" style="color: red" />
+                            <br />
+                            
                             <label for="fnZIP">ZIP / Postal code</label><br />
-                            <h:inputText value="#{createUser.zipCode}" id="txtZip" styleClass="text ui-widget-content ui-corner-all" >
-                                <f:validateRequired />
+                            <h:inputText validator="#{createUser.validateNotEmpty}" value="#{createUser.zipCode}" id="txtZip" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:ajax event="keyup" render="zipError" />
                             </h:inputText>
+                            <br />
+                            <h:message id="zipError" for="txtZip" style="color: red" />
                             <br />
 
                             <label for="fnCity">City, State</label><br />
-                            <h:inputText value="#{createUser.city}" id="txtCity" styleClass="text ui-widget-content ui-corner-all" >
-                                <f:validateRequired />
+                            <h:inputText validator="#{createUser.validateNotEmpty}" value="#{createUser.city}" id="txtCity" styleClass="text ui-widget-content ui-corner-all" >
+                                <f:ajax event="keyup" render="cityError" />
                             </h:inputText>
+                            <br />
+                            <h:message id="cityError" for="txtCity" style="color: red" />
                             <br />
 
                             <label for="fnCountry">Country / Region</label><br />
@@ -131,7 +207,6 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
                             
                             <label for="fnEmail">Email address</label><br />
                             <h:inputText value="#{createUser.email}" validator="#{createUser.validateEmail}" id="txtEmail" styleClass="text ui-widget-content ui-corner-all" >
-                                <f:validateRequired />
                                 <f:ajax event="keyup" render="emailError" />
                             </h:inputText>
                             <br />
@@ -140,7 +215,6 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
 
                             <label for="fnLogin">CDStore Login</label><br />
                             <h:inputText value="#{createUser.userName}" validator="#{createUser.validateUserName}" id="txtLogin" styleClass="text ui-widget-content ui-corner-all" >
-                                <f:validateRequired />
                                 <f:ajax event="keyup" render="userError" />
                             </h:inputText>
                             <br />
@@ -148,13 +222,13 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
                             <br />
                             
                             <label for="fnPassword">Create your password</label><br />
-                            <h:inputSecret validator="#{createUser.validatePassword1}" value="#{createUser.password1}" id="txtPassword" styleClass="text ui-widget-content ui-corner-all" >
+                            <h:inputSecret value="#{createUser.password1}" id="txtPassword" styleClass="text ui-widget-content ui-corner-all" >
                                 <f:ajax event="keyup" render="passwordError" />
                             </h:inputSecret>
                             <br />
 
                             <label for="fnRePassword">Re-enter your password</label><br />
-                            <h:inputSecret validator="#{createUser.validatePassword2}" value="#{createUser.password2}" id="txtRePassword" styleClass="text ui-widget-content ui-corner-all" >
+                            <h:inputSecret validator="#{createUser.validatePassword}" value="#{createUser.password2}" id="txtRePassword" styleClass="text ui-widget-content ui-corner-all" >
                                 <f:ajax event="keyup" render="passwordError" />
                             </h:inputSecret>
                             <br />
@@ -164,9 +238,12 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
                             </fieldset>
 			</h:form>
         <!--               End                 -->
-
            </div>
         </c:if>
+    <div id="albumInfo" title="Album info" style="display:none">
+        
+        
+    </div>
 <div id="searchBG">
     
 <div id="searchField">
@@ -198,7 +275,7 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
             <h:inputSecret size="14" value="#{login.password}" onfocus="javascript:this.value=''" style="position:absolute; border:none; top:4px; left:27px;" />        
         </div>
         <span id="loginBtn">
-        <h:commandLink style="margin-left: -11px; margin-top:6px; text-align: left;" value="Login" action="#{login.logIn}" />
+            <h:commandLink style="margin-left: -11px; margin-top:1px;" value="Login&nbsp;&nbsp;" action="#{login.logIn}" />
         </span>
     </h:form>
     
@@ -209,14 +286,17 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
 </div>
 <h:form id="statusForm">
     <div id="statusDiv"  title="Create Account">
-        <h:inputText id="statusText" style="display:none" />
+        <div id="topChart" style="float:left;">
+        
+        </div>
+        <h:inputText id="statusText" style="display:none; color: red" />
         <h:message for="statusText" />
     </div>
 </h:form>
 <div id="lefContent">
     
 <div id="topBG">
-<p><div style="position:absolute; left:10px; top:7px;">Categories</div></p>
+<p><div style="position:absolute; left:10px; top:10px;">Categories</div></p>
 </div>
     <h:form>
 <span class="categorie">
@@ -276,7 +356,7 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
 </h:form>
 </div>
     <div id="centerCatBG">
-     <div style=" overflow:auto; width:410px; margin-left:7px; height:auto">
+     <div style=" overflow:auto; width:410px; margin-left:4px; height:auto">
          <h:form>
          <h:dataTable id="rTable" value="#{myMusic.music}" var="music" styleClass="order-table"
     			headerClass="order-table-header"
@@ -285,7 +365,7 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
         <h:column>
             <f:facet name="header">Artist Name</f:facet>
             <span class="artist">
-                <h:commandLink action="#{myMusic.setInfoAlbum}" style="margin-right: 7px;" onmouseover="ShowPicture('#{music.title}',1)" onmouseout="ShowPicture('#{music.title}',0)" value="#{music.artistName}"/>
+                <h:commandLink action="#{myMusic.setInfoAlbum}" style="margin-right: 7px;" onclick="getAlbumInfo()" onmouseover="ShowPicture('#{music.title}',1)" onmouseout="ShowPicture('#{music.title}',0)" value="#{music.artistName}"/>
             </span>
         </h:column>
         <h:column>
@@ -323,12 +403,13 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
 </div>
 <div id="cart">
     <h:form>
+        
     <img src="resources/_img/cartTagg.png" alt="Basket" width="50" height="42" style="margin-left:17px; margin-top:15px;"/>
     <h:commandLink action="#{myMusic.linkBasket}" value="#{myBasket.items} items" style="position:absolute; text-decoration: none; top:22px; left:85px; color:#F00; font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px"/>
 <span id="checkoutBtn">
-<a href="#"><div style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#000; position:absolute; left:12px; top:3px;">Checkout</div></a>
+    <h:commandLink action="#{myOrder.yourOrder}" value="&nbsp;&nbsp;&nbsp;Checkout" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#000; position:absolute; left:0px; top:12px;"/>
 </span>
-<p style="font-family:Verdana, Geneva, sans-serif; font-style:italic; font-size:12px; color:#666; margin-left:15px; margin-top:15px; visibility:visible;">#{myBasket.itemMessage}</p>
+<p style="font-family:Verdana, Geneva, sans-serif; font-style:italic; font-size:12px; color:#666; margin-left:15px; margin-top:35px; visibility:visible;">#{myBasket.itemMessage}</p>
 </h:form>
 </div>
 <div id="paymentBG">
@@ -338,7 +419,7 @@ else if (document.getElementById) document.getElementById(''+id+'').style.visibi
 <img src="resources/_img/Mastercard.png" width="50" height="31" style="margin-left:10px; margin-top:5px;"/>
 <img src="resources/_img/Visa.png" width="50" height="31" style="margin-left:10px; margin-top:5px;"/>
 <img src="resources/_img/PayPal.png" width="50" height="31" style="margin-left:10px; margin-top:5px;"/>
-<p style="margin-left:10px; margin-top:20px; color:#666; font-size:12px font-family:'Trebuchet MS', Arial, Helvetica, sans-serif;">These payment methods are available for this page.</p>
+<p style="margin-left:10px; margin-top:20px; color:#666; font-size:12px font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;">These payment methods are available for this page.</p>
 </div>
 <div id="customerServiceBG">
 <p><div style="position:absolute; left:10px; top:7px;">Customer Service</div></p>

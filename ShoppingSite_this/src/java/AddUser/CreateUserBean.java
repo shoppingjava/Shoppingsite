@@ -134,22 +134,34 @@ public class CreateUserBean implements Serializable {
     }
     //</editor-fold>
     //</editor-fold>
-
     
     public String createUserAction() {
+        
+        // Hämtar referens till instansen för att kunna skriva FacesMessages
         FacesContext facesContext = FacesContext.getCurrentInstance();
         FacesMessage facesMessage;
-        //** Kollar om lösenorden är lika **//
-        if ( !password1.equals(password2) )
-            return null; // Om inte så avslutas metoden här
-        else
-            setPassword( password1 ); // Om allt är ok
         
+        //** Kollar om lösenorden är lika **//
+        if ( !password1.equals(password2) ) {
+            facesMessage = new FacesMessage("Account creation failed!");
+            facesContext.addMessage("statusForm:statusText", facesMessage);
+            return null; // Om inte så avslutas metoden här
+        } 
+        else setPassword( password1 ); // Om allt är ok
+
+        // Är något textfält tomt så avslutas metoden
+        if (userName.isEmpty() || password1.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || streetAddress.isEmpty() || city.isEmpty() || zipCode.isEmpty()) {
+            facesMessage = new FacesMessage("Account creation failed!");
+            facesContext.addMessage("statusForm:statusText", facesMessage);
+            return null;
+        }
+        
+        // Hämtar referens till nuvarande session
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             
-            tx = session.beginTransaction();
+            tx = session.beginTransaction(); // Öppnar en transaktion till DB
             
             // Kollar om användarnamnet redan finns i DB
             Query q = session.createQuery ("from Users WHERE user_name = '"+userName+"'");
@@ -159,7 +171,6 @@ public class CreateUserBean implements Serializable {
                 facesContext.addMessage("statusForm:statusText", facesMessage);
                 return null;
             }
-            
 
             // Är allt lungt så uppdateras DB med ny användare
             Users newuser = new Users();
@@ -171,34 +182,51 @@ public class CreateUserBean implements Serializable {
             newuser.setCity(city);
             newuser.setCountry(country);
             newuser.setUserName(userName);
-            newuser.setUserPass(password);
+            newuser.setUserPass( Utilities.MD5Encrypt.encryptPassw(password) ); // MD5-krypterar lösenordet
             
-            session.save(newuser);
-            tx.commit();
+            session.save(newuser); // Skickar över användarobjektet till DB
+            tx.commit(); // Commitar förändringarna
 
-        } catch (Exception e) {
+        } catch (Exception e) { 
             tx.rollback();
             facesMessage = new FacesMessage("Account creation failed!");
             facesContext.addMessage("statusForm:statusText", facesMessage);
             return null;
         }
-
+        
         facesMessage = new FacesMessage("Account successfully created!");
         facesContext.addMessage("statusForm:statusText", facesMessage);
         return null;
     }
     
+    /*
+     *  Kollar om en ogiltig symbol skrivits in i För- eller Efternamn-fälten
+     *  samt om fältet är tomt.
+     */
     public void validateName(FacesContext fc, UIComponent c, Object value) {
-        if (((String) value).isEmpty() )
+        if (value.toString().trim().matches(".*[,/'#~@\\x5B\\x5D}{+_)(*&^%$£\"!\\|<>]+.*")) 
             throw new ValidatorException(
-	         new FacesMessage("Enter a valid name"));
+                    new FacesMessage("Invalid characters!"));
+        
+        if (((String) value).isEmpty() )
+            validateNotEmpty(fc,c,value);
    }
     
+    /*
+     *  Kollar om ett fält är tomt
+     */
+    public void validateNotEmpty(FacesContext fc, UIComponent c, Object value) {
+        if (((String) value).isEmpty() )
+            throw new ValidatorException(
+                    new FacesMessage("Field cannot be empty"));
+    }
+    
+    /*
+     *  Kollar om inmatat email följer ett specifik mönster som är vanligt för mails
+     *  ex. abc@abc.com
+     */
     public void validateEmail(FacesContext fc, UIComponent c, Object value) {
-        // Skapar ett pattern för en vanlig mail address
-        // abc@abc.abc
         Pattern pattern = Pattern.compile("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-        
         Matcher matcher = pattern.matcher((String) value);
         
         if ( !matcher.matches() )
@@ -206,7 +234,9 @@ public class CreateUserBean implements Serializable {
 	         new FacesMessage("Invalid email"));
    }
     
-    /** Kollar om användarnamnet redan existerar i databasen **/
+    /*
+     *  Kollar om användarnamnet redan existerar i databasen 
+     */
     public void validateUserName(FacesContext fc, UIComponent c, Object value) {
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -232,19 +262,15 @@ public class CreateUserBean implements Serializable {
 	         new FacesMessage("Username already exists"));
          
    }
-    
-    public void validatePassword1(FacesContext fc, UIComponent c, Object value) {
-	   if ( ((String) value).equals(" "))
-               throw new ValidatorException(
-	         new FacesMessage("Password cannot be empty"));
-   }
-    
-    public void validatePassword2(FacesContext fc, UIComponent c, Object value) {
-	   if ( !((String) value).equals(password1) )
+
+    /*
+     *  Kollar om lösenordsfälten är tomma och om de är inte lika
+     */
+    public void validatePassword(FacesContext fc, UIComponent c, Object value) {
+	if ( ((String) value).isEmpty())
+               validateNotEmpty(fc, c, value);
+        if ( !((String) value).equals(password1) )
 	      throw new ValidatorException(
 	         new FacesMessage("Passwords does not match"));
-           if ( ((String) value).isEmpty())
-               throw new ValidatorException(
-	         new FacesMessage("Password cannot be empty"));
    }
 }
