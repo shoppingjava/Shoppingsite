@@ -7,10 +7,14 @@ package AddUser;
 import HibernateShopping.HibernateUtil;
 import HibernateShopping.Users;
 import java.io.Serializable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -133,24 +137,40 @@ public class CreateUserBean implements Serializable {
     
     public String createUserAction() {
         
+        // Hämtar referens till instansen för att kunna skriva FacesMessages
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        FacesMessage facesMessage;
+        
         //** Kollar om lösenorden är lika **//
-        if ( !password1.equals(password2) )
+        if ( !password1.equals(password2) ) {
+            facesMessage = new FacesMessage("Account creation failed!");
+            facesContext.addMessage("statusForm:statusText", facesMessage);
             return null; // Om inte så avslutas metoden här
-        else
-            setPassword( password1 ); // Om allt är ok
+        } 
+        else setPassword( password1 ); // Om allt är ok
+
+        // Är något textfält tomt så avslutas metoden
+        if (userName.isEmpty() || password1.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || streetAddress.isEmpty() || city.isEmpty() || zipCode.isEmpty()) {
+            facesMessage = new FacesMessage("Account creation failed!");
+            facesContext.addMessage("statusForm:statusText", facesMessage);
+            return null;
+        }
         
-        
+        // Hämtar referens till nuvarande session
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = null;
         try {
             
-            tx = session.beginTransaction();
+            tx = session.beginTransaction(); // Öppnar en transaktion till DB
             
             // Kollar om användarnamnet redan finns i DB
             Query q = session.createQuery ("from Users WHERE user_name = '"+userName+"'");
             
-            if ( !q.list().isEmpty())
+            if ( !q.list().isEmpty()) {
+                facesMessage = new FacesMessage("Account creation failed!");
+                facesContext.addMessage("statusForm:statusText", facesMessage);
                 return null;
+            }
 
             // Är allt lungt så uppdateras DB med ny användare
             Users newuser = new Users();
@@ -162,46 +182,95 @@ public class CreateUserBean implements Serializable {
             newuser.setCity(city);
             newuser.setCountry(country);
             newuser.setUserName(userName);
-            newuser.setUserPass(password);
+            newuser.setUserPass( Utilities.MD5Encrypt.encryptPassw(password) ); // MD5-krypterar lösenordet
             
-            session.save(newuser);
-            tx.commit();
+            session.save(newuser); // Skickar över användarobjektet till DB
+            tx.commit(); // Commitar förändringarna
 
         } catch (Exception e) { 
             tx.rollback();
+            facesMessage = new FacesMessage("Account creation failed!");
+            facesContext.addMessage("statusForm:statusText", facesMessage);
             return null;
         }
-    
+        
+        facesMessage = new FacesMessage("Account successfully created!");
+        facesContext.addMessage("statusForm:statusText", facesMessage);
         return null;
     }
     
-     //Krypterar lösenord
- /*   public String encryptPassw(String s) {
-        byte[] defaultBytes = s.getBytes();
+    /*
+     *  Kollar om en ogiltig symbol skrivits in i För- eller Efternamn-fälten
+     *  samt om fältet är tomt.
+     */
+    public void validateName(FacesContext fc, UIComponent c, Object value) {
+        if (value.toString().trim().matches(".*[,/'#~@\\x5B\\x5D}{+_)(*&^%$£\"!\\|<>]+.*")) 
+            throw new ValidatorException(
+                    new FacesMessage("Invalid characters!"));
+        
+        if (((String) value).isEmpty() )
+            validateNotEmpty(fc,c,value);
+   }
+    
+    /*
+     *  Kollar om ett fält är tomt
+     */
+    public void validateNotEmpty(FacesContext fc, UIComponent c, Object value) {
+        if (((String) value).isEmpty() )
+            throw new ValidatorException(
+                    new FacesMessage("Field cannot be empty"));
+    }
+    
+    /*
+     *  Kollar om inmatat email följer ett specifik mönster som är vanligt för mails
+     *  ex. abc@abc.com
+     */
+    public void validateEmail(FacesContext fc, UIComponent c, Object value) {
+        Pattern pattern = Pattern.compile("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+        Matcher matcher = pattern.matcher((String) value);
+        
+        if ( !matcher.matches() )
+	      throw new ValidatorException(
+	         new FacesMessage("Invalid email"));
+   }
+    
+    /*
+     *  Kollar om användarnamnet redan existerar i databasen 
+     */
+    public void validateUserName(FacesContext fc, UIComponent c, Object value) {
+
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tx = null;
+        boolean exists = false;
+        
         try {
-            //Skapar alorithm (MD5)
-            MessageDigest algorithm = MessageDigest.getInstance("MD5");
-            algorithm.reset();
-            algorithm.update(defaultBytes);
-            //Array som lagrar tecken
-            byte messageDigest[] = algorithm.digest();
+            
+            tx = session.beginTransaction();
+            
+            // Kollar om användarnamnet redan finns i DB
+            Query q = session.createQuery ("from Users WHERE user_name = '"+((String) value)+"'");
+            
+            if ( !q.list().isEmpty())
+                exists = true;
 
-            StringBuffer hexString = new StringBuffer();
-            for (int i = 0; i < messageDigest.length; i++) {
-                //Lagrar tecken i sträng
-                String hex = Integer.toHexString(0xFF & messageDigest[i]);
-                //Körs om sträng enbart består av ett tecken
-                if (hex.length() == 1) {
-                    hexString.append('0');
-                }
-                //Lägger till tecken
-                hexString.append(hex);
-            }
-            //Returnerar krypterat lösenord
-            return hexString.toString();
-
-        } catch (NoSuchAlgorithmException nsae) {
-            return null;
+        } catch (Exception e) { 
+            throw new ValidatorException( new FacesMessage( "Exception: " + e ));
         }
-    }*/
+        
+        if ( exists )
+                throw new ValidatorException(
+	         new FacesMessage("Username already exists"));
+         
+   }
+
+    /*
+     *  Kollar om lösenordsfälten är tomma och om de är inte lika
+     */
+    public void validatePassword(FacesContext fc, UIComponent c, Object value) {
+	if ( ((String) value).isEmpty())
+               validateNotEmpty(fc, c, value);
+        if ( !((String) value).equals(password1) )
+	      throw new ValidatorException(
+	         new FacesMessage("Passwords does not match"));
+   }
 }
