@@ -100,6 +100,13 @@ h2{
 	padding-bottom: 86px;
 } 
 
+#mainContent #statusDiv{
+    position:relative;
+    width:inherit;
+    height:30px;
+    float:inherit;
+}
+
 #mainContent #searchBG{
 	position:relative;
 	width:920px;
@@ -134,7 +141,7 @@ h2{
 	top:9.4px;
 	left:775px;
 	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-	font-size:14px;
+	font-size:12px;
 	text-decoration:none;
 	color:#000;
 	
@@ -304,7 +311,7 @@ h2{
 #mainContent #centerContent{
 	position:relative;
 	height:auto;
-	margin-top:100px;
+	margin-top:71px;
 	width:420px;
 	margin-left:270px;
 	text-align:left;
@@ -641,4 +648,24 @@ h2{
 
 .spaceRadio {
     margin-bottom: 20px;
+}
+
+#welcomeTxt {
+    position:absolute;
+    margin-left:575px;
+    margin-top:-30px;
+    height: 40px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    color: white;
+}
+
+#topChart {
+    position:absolute;
+    top: 73px;
+    float:left;
+    width:fit-content;
+    height:auto;
+    padding-left: 20px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
